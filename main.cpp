@@ -1,23 +1,19 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <cstring>
+#include <fstream>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include <iostream>
-#include <vector>
-#define _USE_MATH_DEFINES
-#include <chrono>
-#include <cmath>
-#include <cstring>
-#include <fstream>
 #include <iomanip>
+#include <iostream>
+#define _USE_MATH_DEFINES
+#include <math.h>
 #include <sstream>
-#ifndef M_PI
-#define M_PI 3.14159265358979323846
-#endif
+#include <vector>
+
 using namespace glm;
 using namespace std;
-using Clock = std::chrono::high_resolution_clock;
 
 #ifdef _WIN32
 extern "C" // Export symbols to request high-performance GPU
@@ -28,8 +24,6 @@ extern "C" // Export symbols to request high-performance GPU
 #endif
 
 // VARS
-double lastPrintTime = 0.0;
-int framesCount = 0;
 double c = 299792458.0;
 double G = 6.67430e-11;
 struct Ray;
@@ -745,11 +739,10 @@ int main()
     setupCameraCallbacks(engine.window);
     vector<unsigned char> pixels(engine.WIDTH * engine.HEIGHT * 3);
 
-    auto t0 = Clock::now();
-    lastPrintTime = chrono::duration<double>(t0.time_since_epoch()).count();
-
     double lastTime = glfwGetTime();
+    double lastPrintTime = lastTime;
     int renderW = 800, renderH = 600, numSteps = 80000;
+    int framesCount = 0;
     while (!glfwWindowShouldClose(engine.window))
     {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f); // optional, but good practice
@@ -758,6 +751,19 @@ int main()
         double now = glfwGetTime();
         double dt = now - lastTime; // seconds since last frame
         lastTime = now;
+
+        // Update FPS and camera info
+        framesCount++;
+        if (now - lastPrintTime >= 0.2)
+        {
+            double fps = framesCount / (now - lastPrintTime);
+            cout << "\rFPS: " << fixed << setprecision(1) << fps
+                 << " | Radius: " << scientific << setprecision(2) << camera.radius
+                 << " | Azimuth: " << fixed << setprecision(2) << camera.azimuth
+                 << " | Elevation: " << setprecision(2) << camera.elevation;
+            framesCount = 0;
+            lastPrintTime = now;
+        }
 
         // Gravity
         for (auto& obj : objects)
