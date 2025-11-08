@@ -19,6 +19,14 @@ using namespace glm;
 using namespace std;
 using Clock = std::chrono::high_resolution_clock;
 
+#ifdef _WIN32
+extern "C" // Export symbols to request high-performance GPU
+{
+    __declspec(dllexport) unsigned long NvOptimusEnablement = 0x00000001;
+    __declspec(dllexport) int AmdPowerXpressRequestHighPerformance = 1;
+}
+#endif
+
 // VARS
 double lastPrintTime = 0.0;
 int framesCount = 0;
@@ -239,6 +247,7 @@ struct Engine
             exit(EXIT_FAILURE);
         }
         cout << "OpenGL " << glGetString(GL_VERSION) << "\n";
+        cout << "Using GPU: " << glGetString(GL_RENDERER) << "\n";
         this->shaderProgram = CreateShaderProgram();
         gridShaderProgram = CreateShaderProgram("grid.vert", "grid.frag");
 
