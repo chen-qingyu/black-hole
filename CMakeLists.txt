@@ -13,11 +13,6 @@ find_package(OpenGL REQUIRED)
 # Common dependencies
 set(DEPS glfw GLEW::GLEW glm::glm OpenGL::GL)
 
-# 2D Lensing executable
-add_executable(BlackHole2D 2D_lensing.cpp)
-target_link_libraries(BlackHole2D PRIVATE ${DEPS})
-target_include_directories(BlackHole2D PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
-
 # 3D Black Hole executable
 add_executable(BlackHole3D black_hole.cpp)
 target_link_libraries(BlackHole3D PRIVATE ${DEPS})
@@ -38,3 +33,10 @@ foreach(shader ${SHADERS})
     )
 endforeach()
 
+if (WIN32)
+    add_custom_command(TARGET BlackHole3D POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different
+                $<TARGET_RUNTIME_DLLS:BlackHole3D> $<TARGET_FILE_DIR:BlackHole3D>
+        COMMAND_EXPAND_LISTS
+    )
+endif()
