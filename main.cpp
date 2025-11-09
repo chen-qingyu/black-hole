@@ -39,7 +39,7 @@ struct Camera
     float radius = 1.38e11f;
     float minRadius = 1e10f, maxRadius = 1e12f;
 
-    float azimuth = -2.35f;
+    float azimuth = 2.35f;
     float elevation = 1.5f;
 
     float orbitSpeed = 0.01f;
@@ -173,8 +173,10 @@ struct ObjectData
 };
 
 std::vector<ObjectData> objects = {
-    {vec4(4e11f, 0.0f, 0.0f, 4e10f), vec4(1, 1, 0, 1), 1.98892e30f},
-    {vec4(0.0f, 0.0f, 4e11f, 4e10f), vec4(1, 0, 0, 1), 1.98892e30f},
+    {vec4(4e11f, 0.0f, 0.0f, 4e10f), vec4(1, 1, 1, 1), 1e30f},
+    {vec4(0.0f, 0.0f, 4e11f, 4e10f), vec4(1, 0, 0, 1), 1e30f},
+    {vec4(-4e11f, 0.0f, 0.0f, 4e10f), vec4(0, 1, 0, 1), 1e30f},
+    {vec4(0.0f, 0.0f, -4e11f, 4e10f), vec4(0, 0, 1, 1), 1e30f},
     {vec4(0.0f, 0.0f, 0.0f, static_cast<float>(SagA.r_s)), vec4(0, 0, 0, 1), static_cast<float>(SagA.mass)},
 };
 
